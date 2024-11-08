@@ -1,5 +1,5 @@
 function fetchSchedule() {
-    fetch('/api/schedule', {
+    fetch('http://127.0.0.1:5000/api/schedule', {  // Correct URL for the Flask backend
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -13,6 +13,21 @@ function fetchSchedule() {
     })
     .then(response => response.json())
     .then(data => {
-        document.getElementById("schedule").innerHTML = JSON.stringify(data.schedule, null, 2);
-    });
+        // Display the schedule in a more readable format
+        const scheduleDiv = document.getElementById("schedule");
+        scheduleDiv.innerHTML = "<h2>Your Schedule:</h2>";
+        
+        data.schedule.forEach(course => {
+            scheduleDiv.innerHTML += `
+                <p>
+                    Course: ${course.course} <br>
+                    Start Time: ${course.start_time} <br>
+                    End Time: ${course.end_time} <br>
+                    Location: ${course.location}
+                </p>
+                <hr>
+            `;
+        });
+    })
+    .catch(error => console.error("Error fetching schedule:", error));
 }
